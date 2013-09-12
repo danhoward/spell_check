@@ -30,7 +30,20 @@ class Sll
 	end
 end
 
-
-def hash(word)
-
+#
+def hashes(word)
+	h = 5381
+	# can use .ord to get ASCII representation of letter (gotten by indexing word) or just .each_byte
+	word.each_byte do |b|
+		h = ((h << 5) + h) + b
+	end
+	
+	h = h % HASHTABLE_SIZE
 end
+
+
+
+
+
+
+
