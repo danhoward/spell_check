@@ -12,14 +12,6 @@ hashing and checking need to hash word, get array index, probe at index
 	
 =end
 
-class Node 
-	attr_accessor :data, :next
-
-	def initialize(data)
-		@data = data
-	end
-end
-
 =begin
 class Sll
 	attr_accessor :head, :count
@@ -34,9 +26,22 @@ end
 =end
 
 
+
+class Node 
+	attr_accessor :data, :next
+
+	def initialize(data)
+		@data = data
+	end
+end
+
+
+
+
 def hashes(word)
 	h = 5381
 	# can use .ord to get ASCII representation of letter (gotten by indexing word) or just .each_byte
+	word.chomp!
 	word.each_byte do |b|
 		h = ((h << 5) + h) + b
 	end
@@ -50,7 +55,7 @@ end
 def check(text_word)
 	@text_word = text_word
 	# see if bitwise helps
-	text_word.to_lower!
+	text_word.downcase!
 
 	#check hash table 
 	cursor = Node.new(nil)
@@ -92,6 +97,7 @@ def load(dict_file)
 
 		@@counter += 1
 	end
+	return true
 end
 
 
