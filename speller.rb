@@ -6,15 +6,17 @@ require './dictionary.rb'
 
 $:.unshift File.dirname(__FILE__)
 
-text = 'texts/austinpowers.txt'
+text = 'texts/ulysses.txt'
 
 
 dictionary = 'dictionaries/large'
 
-start_load = Time.now
+# benchmark storing dictionary in memory (hash table)
+sload_time = Time.now
 loaded = load(dictionary)
-end_load = Time.now
-load_time = (end_load - start_load)
+eload_time = Time.now
+
+load_time = (eload_time - sload_time)
 
 
 abort("Couldn't load #{dictionary}") unless loaded
@@ -102,6 +104,8 @@ text_fp.each_char do |c|
 	end
 end
 
-puts "Check time = #{check_time} seconds\nLoad Time = #{load_time} seconds"
+puts "***********************************"
+puts "\n\nCheck time = #{check_time} seconds\nLoad Time = #{load_time} seconds"
+puts "Words in Dictionary = #{@@counter}\nMisspellings = #{misspellings}"
 
 
