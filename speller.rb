@@ -6,7 +6,7 @@ require './dictionary.rb'
 
 $:.unshift File.dirname(__FILE__)
 
-text = 'test.txt'
+text = 'texts/austinpowers.txt'
 
 
 dictionary = 'dictionaries/large'
@@ -14,6 +14,7 @@ dictionary = 'dictionaries/large'
 start_load = Time.now
 loaded = load(dictionary)
 end_load = Time.now
+load_time = (end_load - start_load)
 
 
 abort("Couldn't load #{dictionary}") unless loaded
@@ -24,12 +25,13 @@ text_fp = File.open(text, mode = "r")
 abort("Couldn't open #{text}") if text_fp == nil
 
 
-puts "\nMISSPELLED WORDS\n"
+puts "\nMISSPELLED WORDS"
 
 index = 0
 misspellings = 0
 words = 0
 word = String.new
+check_time = 0
 
 # !!!!! ___ -- ISSUE OF representation of string (\0 terminator or not??)
 #
@@ -40,14 +42,16 @@ word = String.new
 # CHECK IS CALLED ON EACH WORD, SO THE TIMER MUST BE UPDATED BY A += CALL
 
 def isalpha?(char)
-	!char.match(/[^A-Za-z]/)
+	!char.match(/[^[:alpha:]]/)
 end
 
 def isdigit?(char)
 	!char.match(/[^0-9]/)
 end
 
-# open file - read in char by char, if no number, not over 45, and hit whitespace, you've got a word, store it, check it
+# open file - read in char by char, if no number, not over 45, 
+# and hit whitespace (or newline), you've got a word, store it, check it
+
 text_fp.each_char do |c|
 
 	if isalpha?(c) || c == "'"
@@ -81,11 +85,12 @@ text_fp.each_char do |c|
 		# we found a word, count it
 		words += 1
 
-		# timer
+		scheck_time = Time.now
 		misspelled = !check(word)   # might need to throw a terminating character on? \n? not NUL terminator
-		# timer
+		echeck_time = Time.now
 
 		# add timer to tally (added up for all the words for report at end)
+		check_time += (echeck_time - scheck_time) 
 
 		if misspelled
 			puts "#{word}"
@@ -96,5 +101,7 @@ text_fp.each_char do |c|
 		word = ""
 	end
 end
+
+puts "Check time = #{check_time} seconds\nLoad Time = #{load_time} seconds"
 
 
